@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herói das Chamas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+    <h1>👨‍🚒 Herói das Chamas</h1>
+
+    <p>
+        Você é um bombeiro em uma missão de resgate.
+        Explore a casa e encontre a pessoa que precisa de ajuda!
+    </p>
+
+    <hr>
+
+    <h2 id="local-titulo">🔥 Rua</h2>
+
+    <p id="descricao">
+        Você está na rua, em frente à casa.
+        O que deseja fazer?
+    </p>
+
+    <ul id="opcoes"></ul>
+
+    <div id="mensagem-final" hidden>
+        <h2>🏆 Jogo concluído com sucesso!</h2>
+        <p>
+            Parabéns, bombeiro! Você encontrou a pessoa
+            e concluiu a missão de resgate!
+        </p>
+
+        <button id="reiniciar">Jogar novamente</button>
+    </div>
+
+    <script>
+        // Mapa da casa e suas passagens
+        const mapa = {
+            rua: {
+                nome: "Rua",
+                descricao: "Você está na rua, em frente à casa.",
+                opcoes: [
+                    {
+                        texto: "Entrar pela porta da sala",
+                        destino: "sala"
+                    },
+                    {
+                        texto: "Entrar pela porta do segundo quarto",
+                        destino: "quarto2"
+                    }
+                ]
+            },
+
+            sala: {
+                nome: "Sala",
+                descricao: "Você está na sala. Escolha uma passagem.",
+                opcoes: [
+                    {
+                        texto: "Ir para a cozinha",
+                        destino: "cozinha"
+                    },
+                    {
+                        texto: "Ir para o corredor",
+                        destino: "corredor"
+                    },
+                    {
+                        texto: "Voltar para a rua",
+                        destino: "rua"
+                    },
+                    {
+                        texto: "Ir para o segundo quarto",
+                        destino: "quarto2"
+                    }
+                ]
+            },
+
+            cozinha: {
+                nome: "Cozinha",
+                descricao: "Você está na cozinha. Escolha uma porta.",
+                opcoes: [
+                    {
+                        texto: "Ir para o corredor",
+                        destino: "corredor"
+                    },
+                    {
+                        texto: "Ir para o banheiro",
+                        destino: "banheiro"
+                    },
+                    {
+                        texto: "Voltar para a sala",
+                        destino: "sala"
+                    }
+                ]
+            },
+
+            corredor: {
+                nome: "Corredor",
+                descricao: "Você está no corredor. Escolha uma porta.",
+                opcoes: [
+                    {
+                        texto: "Entrar no primeiro quarto",
+                        destino: "quarto1"
+                    },
+                    {
+                        texto: "Entrar no banheiro",
+                        destino: "banheiro"
+                    },
+                    {
+                        texto: "Ir para a cozinha",
+                        destino: "cozinha"
+                    },
+                    {
+                        texto: "Ir para a sala",
+                        destino: "sala"
+                    }
+                ]
+            },
+
+            banheiro: {
+                nome: "Banheiro",
+                descricao: "Você está no banheiro.",
+                opcoes: [
+                    {
+                        texto: "Voltar para a cozinha",
+                        destino: "cozinha"
+                    },
+                    {
+                        texto: "Voltar para o corredor",
+                        destino: "corredor"
+                    }
+                ]
+            },
+
+            quarto1: {
+                nome: "Primeiro quarto",
+                descricao: "Você está no primeiro quarto.",
+                opcoes: [
+                    {
+                        texto: "Voltar para o corredor",
+                        destino: "corredor"
+                    }
+                ]
+            },
+
+            quarto2: {
+                nome: "Segundo quarto",
+                descricao: "Você chegou ao cômodo de destino.",
+                opcoes: []
+            }
+        };
+
+        // Elementos da página
+        const titulo = document.getElementById("local-titulo");
+        const descricao = document.getElementById("descricao");
+        const lista = document.getElementById("opcoes");
+        const mensagemFinal = document.getElementById("mensagem-final");
+        const botaoReiniciar = document.getElementById("reiniciar");
+
+        // Mostra o cômodo atual e suas opções
+        function mostrarLocal(local) {
+            const ambiente = mapa[local] || mapa.rua;
+
+            titulo.textContent = ambiente.nome;
+            descricao.textContent = ambiente.descricao;
+
+            lista.replaceChildren();
+
+            mensagemFinal.hidden = local !== "quarto2";
+
+            // Verifica se o jogador chegou ao destino
+            if (local === "quarto2") {
+                titulo.textContent = "🏆 Segundo quarto";
+                descricao.textContent = "Missão concluída!";
+                return;
+            }
+
+            // Cria as opções disponíveis
+            ambiente.opcoes.forEach(function(opcao) {
+                const item = document.createElement("li");
+                const botao = document.createElement("button");
+
+                botao.textContent = opcao.texto;
+
+                botao.addEventListener("click", function() {
+                    mostrarLocal(opcao.destino);
+                });
+
+                item.appendChild(botao);
+                lista.appendChild(item);
+            });
+        }
+
+        // Reinicia o jogo
+        botaoReiniciar.addEventListener("click", function() {
+            mostrarLocal("rua");
+        });
+
+        // Inicia o jogo na rua
+        mostrarLocal("rua");
+    </script>
+
+</body>
+</html>
